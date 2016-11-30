@@ -23,7 +23,9 @@
   "copyright": "2016 Adam Shaw",
   "dependencies": {
     "jquery": ">=2.0.0",
-    "moment": ">=2.9.0"
+    "moment": ">=2.9.0",
+    "socket.io":"1.5.1",
+    "express": "4.14.0"
   },
   "version": "0.0.0",
   "releaseDate": "1970-01-01",

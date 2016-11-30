@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script src="/socket.io/socket.io.js"></script>
+  <!Fullcalender includes>
+  <link rel='stylesheet' href='fullcalendar/fullcalendar.css' />
+  <script src='lib/jquery.min.js'></script>
+  <script src='lib/moment.min.js'></script>
+  <script src='fullcalendar/fullcalendar.js'></script>
+  <!Fullcalender includes end>
+  <script src="client.js"></script>
+  <script src="/server.js"></script>
+
+  <meta charset="UTF-8">
+  <title>Socket.IO and Fullcalender</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+        <header>Node.js Chat <a href="http://nodecode.de/">von NodeCode</a></header>
+        <ul id="content"></ul>
+        <footer>
+            <input id="name" type="text" placeholder="dein Name" />
+            <input id="text" type="text" placeholder="schreibe etwas..." />
+            <input id="senden" type="submit" value="senden" />
+        </footer>
+    </body>
+</html>
