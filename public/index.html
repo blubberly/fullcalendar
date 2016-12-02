@@ -37,11 +37,37 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 
 		<ul id="content"></ul>
 		<div id='calendar'></div>
+		<! Test MODÀL mit Button>
+		<div class "container">
+			<div class="row">
+				<div class="col-md-3">
+
+					<button type= "button" class="btn btn-primary" data-toggle="modal" data-target="#mymodal">
+						Create Event
+					</button>
+
+					<div class="modal fade" id="mymodal">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h3>Neuer Termin:</h3>
+							</div>
+							<div class="modal-body">
+								<p>Inside</p>	
+							</div>
+							<div class="modal-footer">
+								<button type="button" class "btn btn-primary" data-dismiss="modal">x</button>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
 
 		<!http://jsfiddle.net/mccannf/AzmJv/16/  includ modal for eventcreation>
 		<div id="createEventModal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
 		    <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+		        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">x</button>
 		        <h3 id="myModalLabel1">Create Appointment</h3>
 		    </div>
 		    <div class="modal-body">
