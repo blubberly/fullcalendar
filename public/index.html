@@ -8,13 +8,15 @@
 
 		<!Fullcalender includes>
 		<link rel='stylesheet' href='fullcalendar.css' />
-		<script src='lib/jquery.min.js'></script>
+		<script src='lib/jquery-3.1.1.js'></script>
 		<script src='lib/moment.min.js'></script>
 		<script src='fullcalendar.js'></script>
 		<!Fullcalender includes end>
-		<!to use modal need bootstrap css for style and js>
-		<link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css" >
-		<script src='lib/bootstrap/js/bootstrap.js'></script>
+	
+			<!bootstrap from example>
+			<script src='lib/bootstrap.min.js'></script>
+			<link rel="stylesheet" href="lib/bootstrap-combined.min.css" >
+		
 		<script src="client.js"></script>
 	</head>
 
@@ -64,18 +66,18 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 			</div>
 		</div>	
 
-		<!http://jsfiddle.net/mccannf/AzmJv/16/  includ modal for eventcreation>
-		<div id="createEventModal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+	<!http://jsfiddle.net/mccannf/AzmJv/16/  includ modal for eventcreation>
+		<div id="createEventModal" class="modal fade" tabindex="-1" role="dialog">
 		    <div class="modal-header">
-		        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">x</button>
-		        <h3 id="myModalLabel1">Create Appointment</h3>
+		        <button type="button" class="btn btn-primary" data-dismiss="modal">x</button>
+		        <h4 id="myModalLabel1" class="modal-title">Create Appointment</h4>
 		    </div>
 		    <div class="modal-body">
 		    <form id="createAppointmentForm" class="form-horizontal">
 		        <div class="control-group">
-		            <label class="control-label" for="inputPatient">Patient:</label>
+		            <label class="control-label" for="inputEvent">Event Name:</label>
 		            <div class="controls">
-		                <input type="text" name="patientName" id="patientName" tyle="margin: 0 auto;" data-provide="typeahead" data-items="4" data-source="[&quot;Value 1&quot;,&quot;Value 2&quot;,&quot;Value 3&quot;]">
+		                <input type="text" name="eventName" id="eventName" tyle="margin: 0 auto;" data-provide="typeahead" data-items="4" data-source="[&quot;Value 1&quot;,&quot;Value 2&quot;,&quot;Value 3&quot;]">
 		                  <input type="hidden" id="apptStartTime"/>
 		                  <input type="hidden" id="apptEndTime"/>
 		                  <input type="hidden" id="apptAllDay" />
@@ -93,107 +95,156 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		        <button type="submit" class="btn btn-primary" id="submitButton">Save</button>
 		    </div>
 		</div>
-		
+
+	
 
 
 		<script>
 		$(document).ready(function() {
 
+  		
+  			var date = new Date();
+			var d = date.getDate();
+			var m = date.getMonth();
+			var y = date.getFullYear();
+
 	     	var calendar = $('#calendar').fullCalendar({
-		      	defaultView: 'agendaWeek',
+	     	 //header and other values
+
+	     		header: {
+					left: 'prev,next today',
+					center: 'title',
+					right: 'month,agendaWeek,agendaDay,listMonth'
+				},
+				/*
+				 views: {
+				        month: {
+				        	 timeFormat: 'HH(:mm)'
+				            // options apply to basicWeek and basicDay views
+				        },
+				        agendaWeek: {
+				        	 timeFormat: 'HH(:mm)',
+				        	
+				            // options apply to agendaWeek and agendaDay views
+				        },
+				        agendaDay: {
+				        	 timeFormat: 'HH(:mm)'
+				            // options apply to basicWeek and agendaWeek views
+				        },
+				        listMonth: {
+				        	 timeFormat: 'HH(:mm)'
+				            // options apply to basicDay and agendaDay views
+				        }
+				  },
+				  */
+		      	defaultView: 'month',
 		     	editable: true,
 		        selectable: true,
-		        defaultDate: '2016-09-12',
 				navLinks: true, // can click day/week names to navigate views
 				businessHours: true, // display business hours
-		      //header and other values
-		      	select: function(start, end, allDay) {
-		       
-		          endtime = moment(end).format('ddd, MMM do, h:mma ');
-		          starttime = moment(start).format('ddd, MMM do, h:mma ');
-		  
-		          var mywhen = starttime + ' - ' + endtime;
-		          $('#createEventModal #apptStartTime').val(start);
-		          $('#createEventModal #apptEndTime').val(end);
-		          $('#createEventModal #apptAllDay').val(allDay);
-		          $('#createEventModal #when').text(mywhen);
-		          $('#createEventModal').modal('show');
-		       },
-	     		events: [
-					{
-						id: 'availableForMeeting',
-						start: '2016-12-2T10:00:00',
-						end: '2016-12-2T16:00:00',
-						rendering: 'background'
-					},
 
-					// red areas where no events can be dropped
-					{
-						start: '2016-12-24',
-						end: '2016-12-31',
-						overlap: false,
-						rendering: 'background',
-						color: '#ff9f89'
-					},
+				//firstday = 1 week will start on mondays
+		 		firstDay: 1,
+				//auf 24Stunden Uhr umstellen!
+				TimeFormat: 'H(:mm)',
+
+			 	select: function(start, end, allDay) {
+			       
+			          endtime = moment(end).format('ddd, MMM do, H(:mm) ');
+			          starttime = moment(start).format('ddd, MMM do, H(:mm) ');
+			  
+			          var mywhen = starttime + ' - ' + endtime;
+			          $('#createEventModal #apptStartTime').val(start);
+			          $('#createEventModal #apptEndTime').val(end);
+			          $('#createEventModal #apptAllDay').val(allDay);
+			          $('#createEventModal #when').text(mywhen);
+			          $('#createEventModal').modal('show');
+			         
+			     	},
+
+
+
 				
-					{
-						title: 'Meeting',
-						start: '2016-11-30T13:30:00',
-						color: '#d50000'
-					},
-					{
-						id: 999,
-						title: 'Fechten',
-						start: '2016-11-30T17:00:00',
-						end: '2016-11-30T19:00:00',
-						color: '#4a148c'
-					},
-					{
-						id: 999,
-						title: 'Fechten',
-						start: '2016-12-01T20:00:00',
-						end: '2016-12-01T22:00:00',
-						color: '#4a148c'
-					},
-					{
-						title: 'Gospel singen',
-						start: '2016-11-29T17:30:00',
-						url: 'https://www.facebook.com/GOSPELFORUMStuttgart/?fref=ts',
-						end: '2016-11-29T19:30:00',
-						color: '#f4511e'
-					}
+		     		events: [
+						{
+							id: 'availableForMeeting',
+							start: '2016-12-2T10:00:00',
+							end: '2016-12-2T16:00:00',
+							rendering: 'background'
+						},
+
+						// red areas where no events can be dropped
+						{
+							start: '2016-12-24',
+							end: '2016-12-31',
+							overlap: false,
+							rendering: 'background',
+							color: '#ff9f89'
+						},
 					
-				]
-			
-    	   		 // put your options and callbacks here
-    		
+						{
+							title: 'Meeting',
+							start: '2016-11-30T13:30:00',
+							color: '#d50000'
+						},
+						{
+							id: 999,
+							title: 'Fechten',
+							start: '2016-11-30T17:00:00',
+							end: '2016-11-30T19:00:00',
+							color: '#4a148c'
+						},
+						{
+							id: 999,
+							title: 'Fechten',
+							start: '2016-12-01T20:00:00',
+							end: '2016-12-01T22:00:00',
+							color: '#4a148c'
+						},
+						{
+							title: 'Gospel singen',
+							start: '2016-11-29T17:30:00',
+							url: 'https://www.facebook.com/GOSPELFORUMStuttgart/?fref=ts',
+							end: '2016-11-29T19:30:00',
+							color: '#f4511e'
+						}
+						
+					],
+					
+	    	   		 // put your options and callbacks here
+	    		
 			});
   
+	
+         
 
-	  $('#submitButton').on('click', function(e){
-	    // We don't want this to act as a link so cancel the link action
-	    e.preventDefault();
+		  $('#submitButton').on('click', function(e){
+		    // We don't want this to act as a link so cancel the link action
+		    e.preventDefault();
 
-	    doSubmit();
-	  });
+		    doSubmit();
+		  });
 
-	  function doSubmit(){
-	    $("#createEventModal").modal('hide');
-	    console.log($('#apptStartTime').val());
-	    console.log($('#apptEndTime').val());
-	    console.log($('#apptAllDay').val());
-	    alert("form submitted");
-	        
-	    $("#calendar").fullCalendar('renderEvent',
-	        {
-	            title: $('#patientName').val(),
-	            start: new Date($('#apptStartTime').val()),
-	            end: new Date($('#apptEndTime').val()),
-	            allDay: ($('#apptAllDay').val() == "true"),
-	        },
-	        true);
-	   }
-	});
+		  function doSubmit(){
+		    $("#createEventModal").modal('hide');
+		    console.log($('#apptStartTime').val());
+		    console.log($('#apptEndTime').val());
+		    console.log($('#apptAllDay').val());
+		   // alert("form submitted");
+		        
+		    $("#calendar").fullCalendar('renderEvent',
+		        {
+		            title: $('#eventName').val(),
+		            start: new Date($('#apptStartTime').val()),
+		            end: new Date($('#apptEndTime').val()),
+		            allDay: ($('#apptAllDay').val() == "true"),
+		        },
+		        true);
+		        console.log($('#apptEndTime').val());
+		   }
+		    		
+		});
+				
 			
 		</script>
 
@@ -209,7 +260,7 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 	}
 	//calendar size
 	#calendar {
-		max-height: $(window).height()/2;
+		max-height: $(window).height()*0.7;
 		//max-width:  $(window).width();
 		margin: 0 auto;
 	}
