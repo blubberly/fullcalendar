@@ -10,6 +10,7 @@
 		<link rel='stylesheet' href='fullcalendar.css' />
 		<script src='lib/jquery-3.1.1.js'></script>
 		<script src='lib/moment.min.js'></script>
+		<script src='lib/moment-timezone.js'></script>
 		<script src='fullcalendar.js'></script>
 		<!Fullcalender includes end>
 	
@@ -101,8 +102,9 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 
 		<script>
 		$(document).ready(function() {
+		//Add local german Timezone to moment.tz 
+  		moment.tz.add('Europe/Berlin|CET CEST CEMT|-10 -20 -30|01010101010101210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010|-2aFe0 11d0 1iO0 11A0 1o00 11A0 Qrc0 6i00 WM0 1fA0 1cM0 1cM0 1cM0 kL0 Nc0 m10 WM0 1ao0 1cp0 dX0 jz0 Dd0 1io0 17c0 1fA0 1a00 1ehA0 1a00 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|41e5');
 
-  		
   			var date = new Date();
 			var d = date.getDate();
 			var m = date.getMonth();
@@ -137,6 +139,8 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 				        }
 				  },
 				  */
+				 //Add local german Timezone 
+		      	timezone: ('local'),
 		      	defaultView: 'month',
 		     	editable: true,
 		        selectable: true,
@@ -149,9 +153,10 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 				TimeFormat: 'H(:mm)',
 
 			 	select: function(start, end, allDay) {
-			       
-			          endtime = moment(end).format('ddd, MMM do, H(:mm) ');
-			          starttime = moment(start).format('ddd, MMM do, H(:mm) ');
+			       		
+					
+			          endtime = moment.tz(end, "Europe/Berlin").format('ddd, MMM do, H(:mm) ');
+			          starttime = moment.tz(start, "Europe/Berlin").format('ddd, MMM do, H(:mm) ');
 			  
 			          var mywhen = starttime + ' - ' + endtime;
 			          $('#createEventModal #apptStartTime').val(start);
