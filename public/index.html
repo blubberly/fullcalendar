@@ -17,11 +17,17 @@
 			<!bootstrap from example>
 			<script src='lib/bootstrap.min.js'></script>
 			<link rel="stylesheet" href="lib/bootstrap-combined.min.css" >
-		
+		<!jQueryUI>
+		<script src="lib/jquery-ui.js"></script>
+		<link rel="stylesheet" href="lib/jquery-ui.css">
+		<!jquery.timepicker>
+		<script src="lib/jquery.timepicker.js"></script>
+		<link rel="stylesheet" href="lib/jquery.timepicker.css">
 		<script src="client.js"></script>
 	</head>
 
 
+ 
 	<body>
 	<h1 style="letter-spacing:4px; font-family:Fantasy; text-align:right;
 color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
@@ -55,7 +61,7 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 								<h3>Neuer Termin:</h3>
 							</div>
 							<div class="modal-body">
-								<p>Inside</p>	
+								
 							</div>
 							<div class="modal-footer">
 								<button type="button" class "btn btn-primary" data-dismiss="modal">x</button>
@@ -79,7 +85,11 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		            <label class="control-label" for="inputEvent">Event Name:</label>
 		            <div class="controls">
 		                <input type="text" name="eventName" id="eventName" tyle="margin: 0 auto;" data-provide="typeahead" data-items="4" data-source="[&quot;Value 1&quot;,&quot;Value 2&quot;,&quot;Value 3&quot;]">
-		                  <input type="hidden" id="apptStartTime"/>
+		                <p>Beginn: <input type="text" id="datepickerStart"></p>
+		                	<p>Startzeit: <input type="text" id="timepickerStart"></p>
+		                   <p>Ende: <input type="text" id="datepickerEnd"></p>	
+							<p>Endzeit: <input type="text" id="timepickerEnd"></p>
+		                  <input type="text" id="apptStartTime"/>
 		                  <input type="hidden" id="apptEndTime"/>
 		                  <input type="hidden" id="apptAllDay" />
 		            </div>
@@ -100,11 +110,26 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 	
 
 
+
 		<script>
 		$(document).ready(function() {
+ //<script>
+  //$( function() {
+  
+  //} );
+  //<//script>
+  
 		//Add local german Timezone to moment.tz 
   		moment.tz.add('Europe/Berlin|CET CEST CEMT|-10 -20 -30|01010101010101210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010|-2aFe0 11d0 1iO0 11A0 1o00 11A0 Qrc0 6i00 WM0 1fA0 1cM0 1cM0 1cM0 kL0 Nc0 m10 WM0 1ao0 1cp0 dX0 jz0 Dd0 1io0 17c0 1fA0 1a00 1ehA0 1a00 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|41e5');
 
+//Datepicker
+  /*
+  		     Datepair('#jqueryExample.date').datepicker({
+					        'format': 'm/d/yyyy',
+					        'autoclose': true
+					    });
+   			Datepair('#jqueryExample').datepair();
+*/
   			var date = new Date();
 			var d = date.getDate();
 			var m = date.getMonth();
@@ -153,16 +178,46 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 				TimeFormat: 'H(:mm)',
 
 			 	select: function(start, end, allDay) {
-			       		
+			       		//start and end are moment (data)!
 					
 			          endtime = moment.tz(end, "Europe/Berlin").format('ddd, MMM do, H(:mm) ');
 			          starttime = moment.tz(start, "Europe/Berlin").format('ddd, MMM do, H(:mm) ');
 			  
 			          var mywhen = starttime + ' - ' + endtime;
-			          $('#createEventModal #apptStartTime').val(start);
-			          $('#createEventModal #apptEndTime').val(end);
+			          //nicht mehr nötig
+			          var startDate =new Date($('#createEventModal #apptStartTime').val(start));
+
+			          var endDate =$('#createEventModal #apptEndTime').val(end);
+			            
 			          $('#createEventModal #apptAllDay').val(allDay);
 			          $('#createEventModal #when').text(mywhen);
+			          // next init time/datePicker
+			         //datepicker API http://api.jqueryui.com/
+					    $( "#datepickerStart" ).datepicker({
+					    	//start on Monday
+					    	 firstDay: 1,
+					    	 //Selected Date  in Format (Default= "mm/dd/yy")
+					    	dateFormat:"dd-mm-yy",
+					    });
+					 
+					  //after init setDate
+					$( "#datepickerStart" ).datepicker("setDate", new Date(start.year(),start.month(),start.date()));
+
+				    $( "#datepickerEnd" ).datepicker({
+				    	//start on Monday
+				    	 firstDay: 1,
+				    	 //Selected Date  in Format (Default= "mm/dd/yy")
+				    	dateFormat:"dd-mm-yy",
+				    });
+					  
+					$( "#datepickerEnd" ).datepicker("setDate", new Date(end.year(),end.month(),end.date()));
+
+					//Time picker API https://github.com/jonthornton/jquery-timepicker
+					$('#timepickerStart').timepicker({'timeFormat': 'H:i','step': 5, 'setTime': new Date(start.get('hour'),start.get('minute')) });
+
+
+					$('#timepickerEnd').timepicker({ 'timeFormat': 'H:i','step': 5  });	
+				
 			          $('#createEventModal').modal('show');
 			         
 			     	},
