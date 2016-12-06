@@ -23,6 +23,9 @@
 		<!jquery.timepicker>
 		<script src="lib/jquery.timepicker.js"></script>
 		<link rel="stylesheet" href="lib/jquery.timepicker.css">
+		<!bootstrap-material-datetimepicker>
+		<script src="lib/bootstrap-material-datetimepicker.js"></script>
+		<link rel="stylesheet" href="lib/bootstrap-material-datetimepicker.css">
 		<script src="client.js"></script>
 	</head>
 
@@ -46,6 +49,18 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 
 		<ul id="content"></ul>
 		<div id='calendar'></div>
+
+		<style>
+
+	     	.left    { text-align: left; }
+	      	.right   { text-align: right; }
+		    .center  { text-align: center; }
+		    .justify { text-align: justify; }
+		    .start   { text-align: start; }
+		    .end     { text-align: end; }
+
+	    </style>
+
 		<! Test MODÀL mit Button>
 		<div class "container">
 			<div class="row">
@@ -76,9 +91,11 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 	<!http://jsfiddle.net/mccannf/AzmJv/16/  includ modal for eventcreation>
 		<div id="createEventModal" class="modal fade" tabindex="-1" role="dialog">
 		    <div class="modal-header">
-		        <button type="button" class="btn btn-primary" data-dismiss="modal">x</button>
-		        <h4 id="myModalLabel1" class="modal-title">Create Appointment</h4>
+		       <h4 style="display: inline-block" id="myModalLabel1" class="modal-title" >Erzeuge Termin</h4>
+		        <button  style="display: inline-block" type="button" class="btn btn-primary" data-dismiss="modal">x</button>
 		    </div>
+		    
+		        
 		    <div class="modal-body">
 		    <form id="createAppointmentForm" class="form-horizontal">
 		        <div class="control-group">
@@ -86,9 +103,9 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		            <div class="controls">
 		                <input type="text" name="eventName" id="eventName" tyle="margin: 0 auto;" data-provide="typeahead" data-items="4" data-source="[&quot;Value 1&quot;,&quot;Value 2&quot;,&quot;Value 3&quot;]">
 		                <p>Beginn: <input type="text" id="datepickerStart"></p>
-		                	<p>Startzeit: <input type="text" id="timepickerStart"></p>
+		                	<p>Startzeit: <input type="text" id="timepickerStart" class="form-control floating-label" placeholder="Time"></p>
 		                   <p>Ende: <input type="text" id="datepickerEnd"></p>	
-							<p>Endzeit: <input type="text" id="timepickerEnd"></p>
+							<p>Endzeit: <input type="text" id="timepickerEnd" class="form-control floating-label" placeholder="Time"></p>
 		                  <input type="text" id="apptStartTime"/>
 		                  <input type="hidden" id="apptEndTime"/>
 		                  <input type="hidden" id="apptAllDay" />
@@ -136,34 +153,38 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 			var y = date.getFullYear();
 
 	     	var calendar = $('#calendar').fullCalendar({
-	     	 //header and other values
-
+	     	 
+				
+				//header and other values
 	     		header: {
 					left: 'prev,next today',
 					center: 'title',
 					right: 'month,agendaWeek,agendaDay,listMonth'
 				},
-				/*
+				
 				 views: {
 				        month: {
-				        	 timeFormat: 'HH(:mm)'
+				        	 timeFormat: 'HH:mm'
 				            // options apply to basicWeek and basicDay views
 				        },
+				        agenda:{
+				        	 timeFormat: 'HH:mm'
+				        },
 				        agendaWeek: {
-				        	 timeFormat: 'HH(:mm)',
+				        	 timeFormat: 'HH:mm'
 				        	
 				            // options apply to agendaWeek and agendaDay views
 				        },
 				        agendaDay: {
-				        	 timeFormat: 'HH(:mm)'
+				        	 timeFormat: 'HH:mm'
 				            // options apply to basicWeek and agendaWeek views
 				        },
 				        listMonth: {
-				        	 timeFormat: 'HH(:mm)'
+				        	 timeFormat: 'HH:mm'
 				            // options apply to basicDay and agendaDay views
 				        }
 				  },
-				  */
+				 
 				 //Add local german Timezone 
 		      	timezone: ('local'),
 		      	defaultView: 'month',
@@ -171,17 +192,17 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		        selectable: true,
 				navLinks: true, // can click day/week names to navigate views
 				businessHours: true, // display business hours
-
+				//Slot left(Leiste links) change to german 24h Format.
+		  		slotLabelFormat: 'HH:mm',
 				//firstday = 1 week will start on mondays
 		 		firstDay: 1,
-				//auf 24Stunden Uhr umstellen!
-				TimeFormat: 'H(:mm)',
+				
 
 			 	select: function(start, end, allDay) {
-			       		//start and end are moment (data)!
+			       		//start and end are moment (data)! API http://momentjs.com/docs/
 					
-			          endtime = moment.tz(end, "Europe/Berlin").format('ddd, MMM do, H(:mm) ');
-			          starttime = moment.tz(start, "Europe/Berlin").format('ddd, MMM do, H(:mm) ');
+			          endtime = moment.tz(end, "Europe/Berlin").format('ddd, MMM do, H:mm ');
+			          starttime = moment.tz(start, "Europe/Berlin").format('ddd, MMM do, H:mm ');
 			  
 			          var mywhen = starttime + ' - ' + endtime;
 			          //nicht mehr nötig
@@ -212,11 +233,22 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 					  
 					$( "#datepickerEnd" ).datepicker("setDate", new Date(end.year(),end.month(),end.date()));
 
-					//Time picker API https://github.com/jonthornton/jquery-timepicker
-					$('#timepickerStart').timepicker({'timeFormat': 'H:i','step': 5, 'setTime': new Date(start.get('hour'),start.get('minute')) });
+				
+					//clock to click time API https://github.com/T00rk/bootstrap-material-datetimepicker
+					$('#timepickerStart').bootstrapMaterialDatePicker({currentDate: start, clearText: 'Abbruch', date: false, shortTime: false, format: 'HH:mm',nowButton : true, cancelText: 'Abbruch', nowText: 'Jetzt'});
+					
+				
+
+					$('#timepickerEnd').bootstrapMaterialDatePicker({ currentDate: end, clearText:'x', date: false, shortTime: false,	format: 'HH:mm', nowButton : true, cancelText: 'Abbruch', nowText: 'Jetzt'});
 
 
-					$('#timepickerEnd').timepicker({ 'timeFormat': 'H:i','step': 5  });	
+	//Time picker API https://github.com/jonthornton/jquery-timepicker
+					//init timepicker
+			//		$('#timepickerStart').timepicker({'timeFormat': 'H:i','step': 5, setTime: new Date() });
+			//		$('#timepickerStart').timepicker({'setTime': new Date(start)});
+//start.get('hour'),start.get('minute')
+					//$('#timepickerStart').bootstrapMaterialDatePicker('setDate', start);
+					//$('#timepickerEnd').timepicker({ 'timeFormat': 'H:i','step': 5  });	
 				
 			          $('#createEventModal').modal('show');
 			         
