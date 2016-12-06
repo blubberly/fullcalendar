@@ -79,6 +79,125 @@
                     this.days.push(i.toString());
                  }
               },
+              //Reset Date
+               resetDates: function (date daten)
+              {
+                 if (this.$element.val().length > 0)
+                 {
+                    if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                    {
+                       this.currentDate = moment(this.$element.val(), this.params.format).locale(this.params.lang);
+                    } else
+                    {
+                       this.currentDate = moment(this.$element.val()).locale(this.params.lang);
+                    }
+                 } else
+                 {
+                    if (typeof (this.$element.attr('value')) !== 'undefined' && this.$element.attr('value') !== null && this.$element.attr('value') !== "")
+                    {
+                       if (typeof (this.$element.attr('value')) === 'string')
+                       {
+                          if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                          {
+                             this.currentDate = moment(this.$element.attr('value'), this.params.format).locale(this.params.lang);
+                          } else
+                          {
+                             this.currentDate = moment(this.$element.attr('value')).locale(this.params.lang);
+                          }
+                       }
+                    } else
+                    {
+                       if (typeof (this.params.currentDate) !== 'undefined' && this.params.currentDate !== null)
+                       {
+                          if (typeof (this.params.currentDate) === 'string')
+                          {
+                             if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                             {
+                                this.currentDate = moment(this.params.currentDate, this.params.format).locale(this.params.lang);
+                             } else
+                             {
+                                this.currentDate = moment(this.params.currentDate).locale(this.params.lang);
+                             }
+                          } else
+                          {
+                             if (typeof (this.params.currentDate.isValid) === 'undefined' || typeof (this.params.currentDate.isValid) !== 'function')
+                             {
+                                var x = this.params.currentDate.getTime();
+                                this.currentDate = moment(x, "x").locale(this.params.lang);
+                             } else
+                             {
+                                this.currentDate = this.params.currentDate;
+                             }
+                          }
+                          this.$element.val(this.currentDate.format(this.params.format));
+                       } else
+                          this.currentDate = moment();
+                    }
+                 }
+
+                 if (typeof (this.params.minDate) !== 'undefined' && this.params.minDate !== null)
+                 {
+                    if (typeof (this.params.minDate) === 'string')
+                    {
+                       if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                       {
+                          this.minDate = moment(this.params.minDate, this.params.format).locale(this.params.lang);
+                       } else
+                       {
+                          this.minDate = moment(this.params.minDate).locale(this.params.lang);
+                       }
+                    } else
+                    {
+                       if (typeof (this.params.minDate.isValid) === 'undefined' || typeof (this.params.minDate.isValid) !== 'function')
+                       {
+                          var x = this.params.minDate.getTime();
+                          this.minDate = moment(x, "x").locale(this.params.lang);
+                       } else
+                       {
+                          this.minDate = this.params.minDate;
+                       }
+                    }
+                 } else if (this.params.minDate === null)
+                 {
+                    this.minDate = null;
+                 }
+
+                 if (typeof (this.params.maxDate) !== 'undefined' && this.params.maxDate !== null)
+                 {
+                    if (typeof (this.params.maxDate) === 'string')
+                    {
+                       if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                       {
+                          this.maxDate = moment(this.params.maxDate, this.params.format).locale(this.params.lang);
+                       } else
+                       {
+                          this.maxDate = moment(this.params.maxDate).locale(this.params.lang);
+                       }
+                    } else
+                    {
+                       if (typeof (this.params.maxDate.isValid) === 'undefined' || typeof (this.params.maxDate.isValid) !== 'function')
+                       {
+                          var x = this.params.maxDate.getTime();
+                          this.maxDate = moment(x, "x").locale(this.params.lang);
+                       } else
+                       {
+                          this.maxDate = this.params.maxDate;
+                       }
+                    }
+                 } else if (this.params.maxDate === null)
+                 {
+                    this.maxDate = null;
+                 }
+
+                 if (!this.isAfterMinDate(this.currentDate))
+                 {
+                    this.currentDate = moment(this.minDate);
+                 }
+                 if (!this.isBeforeMaxDate(this.currentDate))
+                 {
+                    this.currentDate = moment(this.maxDate);
+                 }
+              },
               initDates: function ()
               {
                  if (this.$element.val().length > 0)
@@ -1124,6 +1243,11 @@
               {
                  this.params.currentDate = date;
                  this.initDates();
+              },
+              resetDate: function(date)
+              {
+                this.params.currentDate = date;
+                this.resetDates(date);
               },
               setMinDate: function (date)
               {
