@@ -269,9 +269,11 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 					//clock to click time API https://github.com/T00rk/bootstrap-material-datetimepicker
 					$('#timepickerStart').bootstrapMaterialDatePicker({currentDate: start, clearText: 'Abbruch', date: false, shortTime: false, format: 'HH:mm',nowButton : true, cancelText: 'Abbruch', nowText: 'Jetzt'});
 				*/	
+					
 
 					$('#timepickerEnd').bootstrapMaterialDatePicker({clearText:'x', date: false, shortTime: false,	format: 'HH:mm', nowButton : true, cancelText: 'Abbruch', nowText: 'Jetzt'});
-					$('#timepickerEnd').bootstrapMaterialDatePicker( 'resetDate', end)
+					$('#timepickerEnd').bootstrapMaterialDatePicker( 'resetDate', end);
+
 						//currentDate: end,
 	//Time picker API https://github.com/jonthornton/jquery-timepicker
 					//init timepicker
@@ -368,6 +370,7 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		        	console.log("reset initTime");
 					$('#timepickerStart').bootstrapMaterialDatePicker().destroy;
 					$('#timepickerStart').bootstrapMaterialDatePicker('destroy');
+					$('#timepickerEnd').bootstrapMaterialDatePicker({'destroy': null} );
 
 		   }
 		    		

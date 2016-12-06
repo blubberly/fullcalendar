@@ -44,6 +44,7 @@
             if (options === 'destroy')
             {
                delete $.data(this, pluginDataName);
+
             }
          }
       });
@@ -80,7 +81,7 @@
                  }
               },
               //Reset Date
-               resetDates: function (date daten)
+               resetDates: function ()
               {
                  if (this.$element.val().length > 0)
                  {
@@ -1247,7 +1248,7 @@
               resetDate: function(date)
               {
                 this.params.currentDate = date;
-                this.resetDates(date);
+                this.resetDates();
               },
               setMinDate: function (date)
               {
