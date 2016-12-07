@@ -112,32 +112,10 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		            <label class="control-label" for="inputEvent">Event Name:</label>
 		            <div class="controls">
 		                <input type="text" name="eventName" id="eventName" tyle="margin: 0 auto;" data-provide="typeahead" data-items="4" data-source="[&quot;Value 1&quot;,&quot;Value 2&quot;,&quot;Value 3&quot;]">
-		                
-		                <p>Beginn:
-		                	<div class="container">
-		                	<input id="timepickerStart" value="" data-default="20:48">	
-							</div>	
-		                 <!input type="text" id="timepickerStart">
-		                 </p>
-		                	
-		                	<div class="input-group clockpicker" data-placement="right" data-align="top" data-autoclose="true">
-						    <input type="text" class="form-control" value="09:32">
-						    <span class="input-group-addon">
-						    	<p>Startzeit:</p> 
-						   		<span class="glyphicon glyphicon-time"></span>
-						    </span>
-						</div>
-		                	
-		                   <p>Ende: <input type="text" id="datepickerEnd"></p>	
+		                	<p>Beginn: <input type="text" id="datepickerStart"></p>	
+							<p>Startzeit: <input type="text" id="timepickerStart" class="form-control floating-label" placeholder="Time"></p>		         
+		                   	<p>Ende: <input type="text" id="datepickerEnd"></p>	
 							<p>Endzeit: <input type="text" id="timepickerEnd" class="form-control floating-label" placeholder="Time"></p>
-		                  <input type="text" id="apptStartTime"/>
-		                  <input type="hidden" id="apptEndTime"/>
-		                  <input type="hidden" id="apptAllDay" />
-		            </div>
-		        </div>
-		        <div class="control-group">
-		            <label class="control-label" for="when">When:</label>
-		            <div class="controls controls-row" id="when" style="margin-top:5px;">
 		            </div>
 		        </div>
 		    </form>
@@ -159,18 +137,10 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		//Add local german Timezone to moment.tz 
   		moment.tz.add('Europe/Berlin|CET CEST CEMT|-10 -20 -30|01010101010101210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010|-2aFe0 11d0 1iO0 11A0 1o00 11A0 Qrc0 6i00 WM0 1fA0 1cM0 1cM0 1cM0 kL0 Nc0 m10 WM0 1ao0 1cp0 dX0 jz0 Dd0 1io0 17c0 1fA0 1a00 1ehA0 1a00 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|41e5');
 
-//Datepicker
-  /*
-  		     Datepair('#jqueryExample.date').datepicker({
-					        'format': 'm/d/yyyy',
-					        'autoclose': true
-					    });
-   			Datepair('#jqueryExample').datepair();
-*/
-  			var date = new Date();
-			var d = date.getDate();
-			var m = date.getMonth();
-			var y = date.getFullYear();
+  			//var date = new Date();
+			//var d = date.getDate();
+			//var m = date.getMonth();
+			//var y = date.getFullYear();
 
 	     	var calendar = $('#calendar').fullCalendar({
 	     	 
@@ -214,25 +184,33 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 				businessHours: true, // display business hours
 				//Slot left(Leiste links) change to german 24h Format.
 		  		slotLabelFormat: 'HH:mm',
+		  		//Top column of the calender will be like "Mon 31/12"
+		  		columnFormat: 'ddd D/M',
 				//firstday = 1 week will start on mondays
 		 		firstDay: 1,
+		 		//Text on the top of the agendaweek
+		 		allDayText: "Ganztägig",
+		 		//Force Event has a duration!
+		 		forceEventDuration: true,
+		 		//Default Time Of Events
+		 		defaultTimedEventDuration: '01:00:00', 
 				
-
+				//start fullcalender function with click. start and end are moment (data)! API http://momentjs.com/docs/
 			 	select: function(start, end, allDay) {
-			       		//start and end are moment (data)! API http://momentjs.com/docs/
+			       		
 											
-						
-			          endtime = moment.tz(end, "Europe/Berlin").format('ddd, MMM do, H:mm ');
-			          starttime = moment.tz(start, "Europe/Berlin").format('ddd, MMM do, H:mm ');
+					//localtime nicht nötig?	
+			         // endtime = moment.tz(end, "Europe/Berlin").format('ddd, MMM do, H:mm ');
+			         // starttime = moment.tz(start, "Europe/Berlin").format('ddd, MMM do, H:mm ');
 			  
-			          var mywhen = starttime + ' - ' + endtime;
+			          //var mywhen = starttime + ' - ' + endtime;
 			          //nicht mehr nötig
-			          var startDate =new Date($('#createEventModal #apptStartTime').val(start));
+			        //  var startDate =new Date($('#createEventModal #apptStartTime').val(start));
 
-			          var endDate =$('#createEventModal #apptEndTime').val(end);
+			        //  var endDate =$('#createEventModal #apptEndTime').val(end);
 			            
-			          $('#createEventModal #apptAllDay').val(allDay);
-			          $('#createEventModal #when').text(mywhen);
+			        //  $('#createEventModal #apptAllDay').val(allDay);
+			        //  $('#createEventModal #when').text(mywhen);
 			          // next init time/datePicker
 			         //datepicker API http://api.jqueryui.com/
 					    $( "#datepickerStart" ).datepicker({
@@ -270,6 +248,8 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 					$('#timepickerStart').bootstrapMaterialDatePicker({currentDate: start, clearText: 'Abbruch', date: false, shortTime: false, format: 'HH:mm',nowButton : true, cancelText: 'Abbruch', nowText: 'Jetzt'});
 				*/	
 					
+					$('#timepickerStart').bootstrapMaterialDatePicker({clearText:'x', date: false, shortTime: false,	format: 'HH:mm', nowButton : true, cancelText: 'Abbruch', nowText: 'Jetzt'});
+					$('#timepickerStart').bootstrapMaterialDatePicker( 'resetDate', start);
 
 					$('#timepickerEnd').bootstrapMaterialDatePicker({clearText:'x', date: false, shortTime: false,	format: 'HH:mm', nowButton : true, cancelText: 'Abbruch', nowText: 'Jetzt'});
 					$('#timepickerEnd').bootstrapMaterialDatePicker( 'resetDate', end);
@@ -285,6 +265,13 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 				
 			          $('#createEventModal').modal('show');
 			         
+ 							
+ 						
+ 				
+			      //   console.log($('#datepickerEnd').value+"TEST");
+			       //   console.log($('#timepickerStart').value);
+
+			          //moment format 2013-02-08 09:30   
 			     	},
 
 
@@ -351,25 +338,36 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		  });
 
 		  function doSubmit(){
+		  		//get choosen (Start) Date and Time from UI 
+		  	   	var getStartDate =$('#datepickerStart').datepicker( 'getDate');
+	         	var getStartTime = $("#timepickerStart").bootstrapMaterialDatePicker({}).val();
+
+	         	//date.getMonth counts from 0 -> need +1 for moment
+				var getStartDateMonthString =getStartDate.getMonth()+1;
+	         	//variable Start Moment to save the event 
+	         	var startMoment = moment(getStartDate.getFullYear()+"-"+getStartDateMonthString+"-"+getStartDate.getDate()+" "+getStartTime, "YYYY-MM-DD HH:mm");		
+
+	         	//get choosen (End) Date and Time from UI 
+	         	var getEndDate =$("#datepickerEnd").datepicker( 'getDate' );
+	         	var getEndTime = $("#timepickerEnd").bootstrapMaterialDatePicker({}).val();
+	         	//date.getMonth counts from 0 -> need +1 for moment
+	    		var getEndDateMonthString =getEndDate.getMonth()+1;
+	           	//variable End Moment to save the event? 
+	         	var endMoment = moment(getEndDate.getFullYear()+"-"+getEndDateMonthString+"-"+getEndDate.getDate()+" "+getEndTime, "YYYY-MM-DD HH:mm");
 		    $("#createEventModal").modal('hide');
-		    console.log($('#apptStartTime').val());
-		    console.log($('#apptEndTime').val());
-		    console.log($('#apptAllDay').val());
-		   // alert("form submitted");
-		        
+	        
 		    $("#calendar").fullCalendar('renderEvent',
 		        {
 		            title: $('#eventName').val(),
-		            start: new Date($('#apptStartTime').val()),
-		            end: new Date($('#apptEndTime').val()),
-		            allDay: ($('#apptAllDay').val() == "true"),
+		            start: startMoment,
+		            end: endMoment,
+		            //allDay: ($('#apptAllDay').val() == "true"),
 		        },
 		        true);
-		        console.log($('#apptEndTime').val());
-		        	//reset initTime of Clock!
-		        	console.log("reset initTime");
-					$('#timepickerStart').bootstrapMaterialDatePicker().destroy;
-					$('#timepickerStart').bootstrapMaterialDatePicker('destroy');
+		    
+		        	//reset initTime of Clock! 
+					//$('#timepickerStart').bootstrapMaterialDatePicker().destroy;
+					//$('#timepickerStart').bootstrapMaterialDatePicker('destroy');
 					$('#timepickerEnd').bootstrapMaterialDatePicker({'destroy': null} );
 
 		   }
