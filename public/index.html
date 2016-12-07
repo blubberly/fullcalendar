@@ -12,6 +12,7 @@
 		<script src='lib/moment.min.js'></script>
 		<script src='lib/moment-timezone.js'></script>
 		<script src='fullcalendar.js'></script>
+		<script src='locale/de.js'></script>
 		<!Fullcalender includes end>
 	
 			<!bootstrap from example>
@@ -45,64 +46,33 @@
 color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 	Combine fullcalender and socket.io.</h1>
 	
-
+		<!load picture>
 		<img src="/pictures/Tulpen.jpg" 
 		alt="Kalenderkopf"
 		width="100%" height ="100%">
 
-
-			<input id="name" type="text" placeholder="Eventname" />
-			<input id="text" type="text" placeholder="schreibe etwas..." />
-			<input id="senden" type="submit" class="btn" value="senden" />
-		
-
+		<!socket.io content>
 		<ul id="content"></ul>
+		<!placeholder for the Calender>
 		<div id='calendar'></div>
 
+
+		<! modalheader needs two alignments therefor use a style to set this up>
 		<style>
+			.alignLeft {
+			    position: absolute;
+			    top: 5px;
+			    left: 10px;
+			    font-size: 30px;
+			}
 
-	     	.left    { text-align: left; }
-	      	.right   { text-align: right; }
-		    .center  { text-align: center; }
-		    .justify { text-align: justify; }
-		    .start   { text-align: start; }
-		    .end     { text-align: end; }
+		</style>
 
-	    </style>
-
-		<! Test MODÀL mit Button>
-		<div class "container">
-			<div class="row">
-				<div class="col-md-3">
-
-					<button type= "button" class="btn btn-primary" data-toggle="modal" data-target="#mymodal">
-						Create Event
-					</button>
-
-					<div class="modal fade" id="mymodal">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h3>Neuer Termin:</h3>
-							</div>
-							<div class="modal-body">
-								
-							</div>
-							<div class="modal-footer">
-								<button type="button" class "btn btn-primary" data-dismiss="modal">x</button>
-							</div>
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>	
-
-		
 
 	<!http://jsfiddle.net/mccannf/AzmJv/16/  includ modal for eventcreation>
 		<div id="createEventModal" class="modal fade" tabindex="-1" role="dialog">
-		    <div class="modal-header">
-		       <h4 style="display: inline-block" id="myModalLabel1" class="modal-title" >Erzeuge Termin</h4>
+		    <div align="right" class="modal-header">
+		       <h4 class="alignLeft" text-align="left" style="display: inline-block" id="myModalLabel1" class="modal-title" >Erzeuge Termin</h4>
 		        <button  style="display: inline-block" type="button" class="btn btn-primary" data-dismiss="modal">x</button>
 		    </div>
 		    
@@ -135,46 +105,75 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		$(document).ready(function() {
 			
 		
-		//Add local german Timezone to moment.tz 
-  		moment.tz.add('Europe/Berlin|CET CEST CEMT|-10 -20 -30|01010101010101210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010|-2aFe0 11d0 1iO0 11A0 1o00 11A0 Qrc0 6i00 WM0 1fA0 1cM0 1cM0 1cM0 kL0 Nc0 m10 WM0 1ao0 1cp0 dX0 jz0 Dd0 1io0 17c0 1fA0 1a00 1ehA0 1a00 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|41e5');
-
-  			//var date = new Date();
-			//var d = date.getDate();
-			//var m = date.getMonth();
-			//var y = date.getFullYear();
+		//Add local german Timezone to moment.tz ?not needed anymore?
+  		//moment.tz.add('Europe/Berlin|CET CEST CEMT|-10 -20 -30|01010101010101210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010|-2aFe0 11d0 1iO0 11A0 1o00 11A0 Qrc0 6i00 WM0 1fA0 1cM0 1cM0 1cM0 kL0 Nc0 m10 WM0 1ao0 1cp0 dX0 jz0 Dd0 1io0 17c0 1fA0 1a00 1ehA0 1a00 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|41e5');
 
 	     	var calendar = $('#calendar').fullCalendar({
-	     	 
-				
+	     	 	//create myown button
+				customButtons: {
+			        createEventButton: {
+			            text: 'Erzeuge Termin',
+			            click: function() {
+			                alert('clicked the custom button!');
+			            }
+			        }
+			    },
+			    	//setup local language
+			        locale: 'de',
+			        //Change names to german
+			        monthNames:
+			        ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+			        monthNamesShort:
+			        ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
+			        dayNames:	
+			        ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+			        dayNamesShort:
+			        ['Son', 'Mon', 'Die', 'Mit', 'Don', 'Fre', 'Sam'],
+			        //set format of the title on top of the calender
+			        titleFormat: 'DD MMMM YYYY',
+
 				//header and other values
 	     		header: {
-					left: 'prev,next today',
+					left: 'prev,next today createEventButton',
 					center: 'title',
 					right: 'month,agendaWeek,agendaDay,listMonth'
 				},
 				
 				 views: {
 				        month: {
-				        	 timeFormat: 'HH:mm'
+				        	 timeFormat: 'HH:mm',
+				        	 displayEventEnd: true
 				            // options apply to basicWeek and basicDay views
 				        },
 				        agenda:{
-				        	 timeFormat: 'HH:mm'
+				        	 timeFormat: 'HH:mm',
+				        	 displayEventEnd: true
 				        },
 				        agendaWeek: {
-				        	 timeFormat: 'HH:mm'
+				        	 timeFormat: 'HH:mm',
+				        	 displayEventEnd: true
 				        	
 				            // options apply to agendaWeek and agendaDay views
 				        },
 				        agendaDay: {
-				        	 timeFormat: 'HH:mm'
+				        	 timeFormat: 'HH:mm',
+				        	 displayEventEnd: true
 				            // options apply to basicWeek and agendaWeek views
 				        },
 				        listMonth: {
-				        	 timeFormat: 'HH:mm'
+				        	 timeFormat: 'HH:mm',
+				        	 displayEventEnd: true
 				            // options apply to basicDay and agendaDay views
 				        }
 				  },
+				  //Text of the buttons on the top.
+					buttonText:{
+					    today:    'Heute',
+					    month:    'Monat',
+					    week:     'Woche',
+					    day:      'Tag',
+					    list:     'Liste'
+					},
 				 
 				 //Add local german Timezone 
 		      	timezone: ('local'),
@@ -208,16 +207,7 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 					//localtime nicht nötig?	
 			         // endtime = moment.tz(end, "Europe/Berlin").format('ddd, MMM do, H:mm ');
 			         // starttime = moment.tz(start, "Europe/Berlin").format('ddd, MMM do, H:mm ');
-			  
-			          //var mywhen = starttime + ' - ' + endtime;
-			          //nicht mehr nötig
-			        //  var startDate =new Date($('#createEventModal #apptStartTime').val(start));
 
-			        //  var endDate =$('#createEventModal #apptEndTime').val(end);
-			            
-			        //  $('#createEventModal #apptAllDay').val(allDay);
-			        //  $('#createEventModal #when').text(mywhen);
-			          // next init time/datePicker
 			         //datepicker API http://api.jqueryui.com/
 					    $( "#datepickerStart" ).datepicker({
 					    	//start on Monday
@@ -225,22 +215,15 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 					    	 //Selected Date  in Format (Default= "mm/dd/yy")
 					    	dateFormat:"dd-mm-yy",
 					    });
-					 
 					  //after init setDate
 					$( "#datepickerStart" ).datepicker("setDate", new Date(start.year(),start.month(),start.date()));
-					//$("#timepickerStart").clockpicker('show').clockpicker('toggleView', 'minutes');
-					//$("#timepickerStart").clockpicker().find('input').change(function(){
-        // TODO: time changed
-        //console.log(this.value);
-   // });
-
+				
 				    $( "#datepickerEnd" ).datepicker({
 				    	//start on Monday
 				    	 firstDay: 1,
 				    	 //Selected Date  in Format (Default= "mm/dd/yy")
 				    	dateFormat:"dd-mm-yy",
 				    });
-					  
 					$( "#datepickerEnd" ).datepicker("setDate", new Date(end.year(),end.month(),end.date()));
 
 
@@ -249,10 +232,10 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 				    		autoclose: true
 					});
 				
-				/*
+				
 					//clock to click time API https://github.com/T00rk/bootstrap-material-datetimepicker
-					$('#timepickerStart').bootstrapMaterialDatePicker({currentDate: start, clearText: 'Abbruch', date: false, shortTime: false, format: 'HH:mm',nowButton : true, cancelText: 'Abbruch', nowText: 'Jetzt'});
-				*/	
+				//	$('#timepickerStart').bootstrapMaterialDatePicker({currentDate: start, clearText: 'Abbruch', date: false, shortTime: false, format: 'HH:mm',nowButton : true, cancelText: 'Abbruch', nowText: 'Jetzt'});
+				
 					
 					$('#timepickerStart').bootstrapMaterialDatePicker({clearText:'x', date: false, shortTime: false,	format: 'HH:mm', nowButton : true, cancelText: 'Abbruch', nowText: 'Jetzt'});
 					$('#timepickerStart').bootstrapMaterialDatePicker( 'resetDate', start);
@@ -261,23 +244,15 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 					$('#timepickerEnd').bootstrapMaterialDatePicker( 'resetDate', end);
 
 						//currentDate: end,
-	//Time picker API https://github.com/jonthornton/jquery-timepicker
+					//Time picker API https://github.com/jonthornton/jquery-timepicker
 					//init timepicker
-			//		$('#timepickerStart').timepicker({'timeFormat': 'H:i','step': 5, setTime: new Date() });
-			//		$('#timepickerStart').timepicker({'setTime': new Date(start)});
-//start.get('hour'),start.get('minute')
+					//		$('#timepickerStart').timepicker({'timeFormat': 'H:i','step': 5, setTime: new Date() });
+					//		$('#timepickerStart').timepicker({'setTime': new Date(start)});
+					//start.get('hour'),start.get('minute')
 					//$('#timepickerStart').bootstrapMaterialDatePicker('setDate', start);
 					//$('#timepickerEnd').timepicker({ 'timeFormat': 'H:i','step': 5  });	
 				
-			          $('#createEventModal').modal('show');
-			         
- 							
- 						
- 				
-			      //   console.log($('#datepickerEnd').value+"TEST");
-			       //   console.log($('#timepickerStart').value);
-
-			          //moment format 2013-02-08 09:30   
+			          $('#createEventModal').modal('show');			         
 			     	},
 
 
@@ -374,7 +349,7 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		        	//reset initTime of Clock! 
 					//$('#timepickerStart').bootstrapMaterialDatePicker().destroy;
 					//$('#timepickerStart').bootstrapMaterialDatePicker('destroy');
-					$('#timepickerEnd').bootstrapMaterialDatePicker({'destroy': null} );
+					//$('#timepickerEnd').bootstrapMaterialDatePicker({'destroy': null} );
 
 		   }
 		    		
@@ -382,26 +357,5 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 				
 			
 		</script>
-
-
-
-
-		<style>
-	body {
-		margin: 40px 10px;
-		padding: 0;
-		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-		font-size: 14px;
-	}
-	//calendar size
-
-	#calendar {
-		var size =  $(window).width()*0.5
-		//max-height: $(window).height()*0.7;
-		max-width:  '400p';
-		margin: 0 auto;
-	}
-
-
 	</body>
 </html>
