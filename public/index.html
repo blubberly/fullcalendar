@@ -20,6 +20,7 @@
 		<!jQueryUI>
 		<script src="lib/jquery-ui.js"></script>
 		<link rel="stylesheet" href="lib/jquery-ui.css">
+		
 		<!jquery.timepicker>
 		<script src="lib/jquery.timepicker.js"></script>
 		<link rel="stylesheet" href="lib/jquery.timepicker.css">
@@ -194,6 +195,11 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		 		forceEventDuration: true,
 		 		//Default Time Of Events
 		 		defaultTimedEventDuration: '01:00:00', 
+		 		//?
+		 		//resourceAreaWidth: "50%",
+		 		height: $(window).height()*0.9,
+		 		theme: true,
+
 				
 				//start fullcalender function with click. start and end are moment (data)! API http://momentjs.com/docs/
 			 	select: function(start, end, allDay) {
@@ -388,9 +394,11 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		font-size: 14px;
 	}
 	//calendar size
+
 	#calendar {
-		max-height: $(window).height()*0.7;
-		//max-width:  $(window).width();
+		var size =  $(window).width()*0.5
+		//max-height: $(window).height()*0.7;
+		max-width:  '400p';
 		margin: 0 auto;
 	}
 
