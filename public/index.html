@@ -13,6 +13,11 @@
 		<script src='lib/moment-timezone.js'></script>
 		<script src='fullcalendar.js'></script>
 		<script src='locale/de.js'></script>
+		<!for googleCalender>
+		<script type='text/javascript' src='gcal.js'></script>
+		<!googleCalender>
+		<script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+		<script src="https://apis.google.com/js/client.js?onload=checkAuth"></script>
 		<!Fullcalender includes end>
 	
 			<!bootstrap from example>
@@ -97,18 +102,243 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		    </div>
 		</div>
 
-	
+	//include google API Example from google
+	 <head>
+    <script type="text/javascript">
+      // Your Client ID can be retrieved from your project in the Google
+      // Developer Console, https://console.developers.google.com
+      var CLIENT_ID = '<926194664076-vs2n4r0r7opei0p549cuaf1l9ji7e8u0.apps.googleusercontent.com>';
+
+      var SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
+
+      /**
+       * Check if current user has authorized this application.
+       */
+      function checkAuth() {
+        gapi.auth.authorize(
+          {
+            'client_id': CLIENT_ID,
+            'scope': SCOPES.join(' '),
+            'immediate': true
+          }, handleAuthResult);
+      }
+
+      /**
+       * Handle response from authorization server.
+       *
+       * @param {Object} authResult Authorization result.
+       */
+      function handleAuthResult(authResult) {
+        var authorizeDiv = document.getElementById('authorize-div');
+        if (authResult && !authResult.error) {
+          // Hide auth UI, then load client library.
+          authorizeDiv.style.display = 'none';
+          loadCalendarApi();
+        } else {
+          // Show auth UI, allowing the user to initiate authorization by
+          // clicking authorize button.
+          authorizeDiv.style.display = 'inline';
+        }
+      }
+
+      /**
+       * Initiate auth flow in response to user clicking authorize button.
+       *
+       * @param {Event} event Button click event.
+       */
+      function handleAuthClick(event) {
+        gapi.auth.authorize(
+          {client_id: CLIENT_ID, scope: SCOPES, immediate: false},
+          handleAuthResult);
+        return false;
+      }
+
+      /**
+       * Load Google Calendar client library. List upcoming events
+       * once client library is loaded.
+       */
+      function loadCalendarApi() {
+        gapi.client.load('calendar', 'v3', listUpcomingEvents);
+      }
+
+      /**
+       * Print the summary and start datetime/date of the next ten events in
+       * the authorized user's calendar. If no events are found an
+       * appropriate message is printed.
+       */
+      function listUpcomingEvents() {
+        var request = gapi.client.calendar.events.list({
+          'calendarId': 'primary',
+          'timeMin': (new Date()).toISOString(),
+          'showDeleted': false,
+          'singleEvents': true,
+          'maxResults': 10,
+          'orderBy': 'startTime'
+        });
+
+        request.execute(function(resp) {
+          var events = resp.items;
+          appendPre('Upcoming events:');
+
+          if (events.length > 0) {
+            for (i = 0; i < events.length; i++) {
+              var event = events[i];
+              var when = event.start.dateTime;
+              if (!when) {
+                when = event.start.date;
+              }
+              appendPre(event.summary + ' (' + when + ')')
+            }
+          } else {
+            appendPre('No upcoming events found.');
+          }
+
+        });
+      }
+
+      /**
+       * Append a pre element to the body containing the given message
+       * as its text node.
+       *
+       * @param {string} message Text to be placed in pre element.
+       */
+      function appendPre(message) {
+        var pre = document.getElementById('output');
+        var textContent = document.createTextNode(message + '\n');
+        pre.appendChild(textContent);
+      }
+
+    </script>
+    
+  </head>
+  <body>
+    <div id="authorize-div" style="display: none">
+      <span>Authorize access to Google Calendar API</span>
+      <!--Button for the user to click to initiate auth sequence -->
+      <button id="authorize-button" onclick="handleAuthClick(event)">
+        Authorize
+      </button>
+    </div>
+    <pre id="output"></pre>
+  </body>
+	//include google api end
+
+
 
 
 
 		<script>
 		$(document).ready(function() {
+/*
+		//START GOOGLE API old example from user fullcalender
+
+			var clientId = '<926194664076-vs2n4r0r7opei0p549cuaf1l9ji7e8u0.apps.googleusercontent.com>';
+			var apiKey = '<YT1jkGkF0e-1kuwBpz82BO5O>';
+			var scopes = 'http://localhost:3000/';
+
+			function handleClientLoad() {
+				gapi.client.setApiKey(apiKey);
+				window.setTimeout(checkAuth,1);
+			}
+
+			function checkAuth() {
+				gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, handleAuthResult);
+			}
+
+			function handleAuthResult(authResult) {
+				var authorizeButton = document.getElementById('authorize-button');
+				
+				if (authResult && !authResult.error) {
+					authorizeButton.style.visibility = 'hidden';		  
+					makeApiCall();
+				} else {
+					authorizeButton.style.visibility = '';
+					authorizeButton.onclick = handleAuthClick;
+					GeneratePublicCalendar();
+				}
+			}
+
+			function handleAuthClick(event) {            
+				gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
+				return false;
+			}
 			
+			
+			// Load the API and make an API call.  Display the results on the screen.
+			function makeApiCall() {
+
+				// Step 4: Load the Google+ API
+				gapi.client.load('calendar', 'v3').then(function() {
+				  // Step 5: Assemble the API request
+					  var request = gapi.client.calendar.events.list({
+							'calendarId': '<your-calendar-id(The @gmail.com>'
+						});
+				  
+						// Step 6: Execute the API request
+						request.then(function(resp) {
+
+							var eventsList = [];
+							var successArgs;
+							var successRes;
+
+							if (resp.result.error) {
+								reportError('Google Calendar API: ' + data.error.message, data.error.errors);
+							}
+							else if (resp.result.items) {
+								$.each(resp.result.items, function(i, entry) {
+									var url = entry.htmlLink;
+
+									// make the URLs for each event show times in the correct timezone
+									//if (timezoneArg) {
+									//    url = injectQsComponent(url, 'ctz=' + timezoneArg);
+									//}
+
+									eventsList.push({
+										id: entry.id,
+										title: entry.summary,
+										start: entry.start.dateTime || entry.start.date, // try timed. will fall back to all-day
+										end: entry.end.dateTime || entry.end.date, // same
+										url: url,
+										location: entry.location,
+										description: entry.description
+									});
+								});
+
+								// call the success handler(s) and allow it to return a new events array
+								successArgs = [ eventsList ].concat(Array.prototype.slice.call(arguments, 1)); // forward other jq args
+								successRes = $.fullCalendar.applyAll(true, this, successArgs);
+								if ($.isArray(successRes)) {
+									return successRes;
+								}
+							}
+
+							if(eventsList.length > 0)
+							{
+                              // Here create your calendar but the events options is :
+                              //fullcalendar.events: eventsList (Still looking for a methode that remove current event and fill with those news event without recreating the calendar.
+                              
+                            }
+                          return eventsList;
+							
+					  }, function(reason) {
+						console.log('Error: ' + reason.result.error.message);
+					  });
+				});
+			}
+
+
+		// END GOOGLE API
+*/
+
+
+
 		
 		//Add local german Timezone to moment.tz ?not needed anymore?
   		//moment.tz.add('Europe/Berlin|CET CEST CEMT|-10 -20 -30|01010101010101210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010|-2aFe0 11d0 1iO0 11A0 1o00 11A0 Qrc0 6i00 WM0 1fA0 1cM0 1cM0 1cM0 kL0 Nc0 m10 WM0 1ao0 1cp0 dX0 jz0 Dd0 1io0 17c0 1fA0 1a00 1ehA0 1a00 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|41e5');
 
 	     	var calendar = $('#calendar').fullCalendar({
+
+	     		   
 	     	 	//create myown button
 				customButtons: {
 			        createEventButton: {
@@ -257,8 +487,12 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 
 
 
-				
+				//googleCalendarApiKey: '<926194664076-vs2n4r0r7opei0p549cuaf1l9ji7e8u0.apps.googleusercontent.com>',
 		     		events: [
+		     			//{
+	       				//    googleCalendarId: 'gouq77omgo0tj35ko3p4phbk0s@group.calendar.google.com'
+	     			    //},
+
 						{
 							id: 'availableForMeeting',
 							start: '2016-12-2T10:00:00',
