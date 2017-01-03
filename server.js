@@ -5,6 +5,7 @@ var express = require('express')
 ,   io = require('socket.io').listen(server)
 var port = 3000;
 
+
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
@@ -30,6 +31,7 @@ io.sockets.on('connection', function (socket) {
 		io.sockets.emit('chat', { zeit: new Date(), name: data.name || 'Anonym', text: data.text });
 	});
 });
+
 
 // Portnummer in die Konsole schreiben
 console.log('Der Server läuft nun unter http://127.0.0.1:' + port + '/');

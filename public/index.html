@@ -13,12 +13,19 @@
 		<script src='lib/moment-timezone.js'></script>
 		<script src='fullcalendar.js'></script>
 		<script src='locale/de.js'></script>
+
 		<!for googleCalender>
 		<script type='text/javascript' src='gcal.js'></script>
 		<!googleCalender>
+		<script src="https://apis.google.com/js/api.js"></script>
 		<script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
 		<script src="https://apis.google.com/js/client.js?onload=checkAuth"></script>
-		<!Fullcalender includes end>
+		<!google Sign in>
+		<meta name="google-signin-client_id" content="864203635316-b31on9gaeubq72s51nbapi1gnkg2c725.apps.googleusercontent.com">
+
+		<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+
 	
 			<!bootstrap from example>
 			<script src='lib/bootstrap.min.js'></script>
@@ -72,7 +79,74 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 			}
 
 		</style>
+	<!google sign in Button>
+	<div class="g-signin2" data-onsuccess="onSignIn"></div>
+	<a href="#" onclick="signOut();">Sign out</a>
 
+
+<!google authentifizierung>
+<script src="https://apis.google.com/js/api.js"></script>
+    <script>
+      function start() {
+        // Initializes the client with the API key and the Translate API.
+        gapi.client.init({
+          'apiKey': 'AIzaSyCOM_XtlLMvnaCY2VLobeDTHoGpl-3t-ck',
+          'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/translate/v2/rest'],
+        }).then(function() {
+          // Executes an API request, and returns a Promise.
+          // The method name `language.translations.list` comes from the API discovery.
+          return gapi.client.language.translations.list({
+            q: 'hello world',
+            source: 'en',
+            target: 'de',
+          });
+        }).then(function(response) {
+          console.log(response.result.data.translations[0].translatedText);
+        }, function(reason) {
+          console.log('Error: ' + reason.result.error.message);
+        });
+      };
+
+      // Loads the JavaScript client library and invokes `start` afterwards.
+      gapi.load('client', start);
+    </script>
+        <div id="results"></div>
+
+
+	<!google sign in Script>
+	<script type="text/javascript">
+		function onSignIn(googleUser) {
+		  var profile = googleUser.getBasicProfile();
+		  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+		  console.log('Name: ' + profile.getName());
+		  console.log('Image URL: ' + profile.getImageUrl());
+		  console.log('Email: ' + profile.getEmail());
+		}	
+		  function signOut() {
+		    var auth2 = gapi.auth2.getAuthInstance();
+		    auth2.signOut().then(function () {
+		      console.log('User signed out.');
+		  });
+  }
+
+	</script>
+	
+
+
+
+	<!google button style="display: none" TODO>
+    <div id="authorize-div">
+      <span>Authorize access to Google Calendar API</span>
+      <!--Button for the user to click to initiate auth sequence -->
+      <button id="authorize-button" onclick="handleAuthClick(event)">
+        Authorize
+      </button>
+    </div>
+    <pre id="output"></pre>
+    <!google button end>
+
+   
+   
 
 	<!http://jsfiddle.net/mccannf/AzmJv/16/  includ modal for eventcreation>
 		<div id="createEventModal" class="modal fade" tabindex="-1" role="dialog">
@@ -102,12 +176,12 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		    </div>
 		</div>
 
+
 	//include google API Example from google
-	 <head>
     <script type="text/javascript">
       // Your Client ID can be retrieved from your project in the Google
       // Developer Console, https://console.developers.google.com
-      var CLIENT_ID = '<926194664076-vs2n4r0r7opei0p549cuaf1l9ji7e8u0.apps.googleusercontent.com>';
+      var CLIENT_ID = '<864203635316-b31on9gaeubq72s51nbapi1gnkg2c725.apps.googleusercontent.com>';
 
       var SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
 
@@ -210,17 +284,9 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 
     </script>
     
-  </head>
-  <body>
-    <div id="authorize-div" style="display: none">
-      <span>Authorize access to Google Calendar API</span>
-      <!--Button for the user to click to initiate auth sequence -->
-      <button id="authorize-button" onclick="handleAuthClick(event)">
-        Authorize
-      </button>
-    </div>
-    <pre id="output"></pre>
-  </body>
+
+
+
 	//include google api end
 
 
@@ -229,106 +295,6 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 
 		<script>
 		$(document).ready(function() {
-/*
-		//START GOOGLE API old example from user fullcalender
-
-			var clientId = '<926194664076-vs2n4r0r7opei0p549cuaf1l9ji7e8u0.apps.googleusercontent.com>';
-			var apiKey = '<YT1jkGkF0e-1kuwBpz82BO5O>';
-			var scopes = 'http://localhost:3000/';
-
-			function handleClientLoad() {
-				gapi.client.setApiKey(apiKey);
-				window.setTimeout(checkAuth,1);
-			}
-
-			function checkAuth() {
-				gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, handleAuthResult);
-			}
-
-			function handleAuthResult(authResult) {
-				var authorizeButton = document.getElementById('authorize-button');
-				
-				if (authResult && !authResult.error) {
-					authorizeButton.style.visibility = 'hidden';		  
-					makeApiCall();
-				} else {
-					authorizeButton.style.visibility = '';
-					authorizeButton.onclick = handleAuthClick;
-					GeneratePublicCalendar();
-				}
-			}
-
-			function handleAuthClick(event) {            
-				gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
-				return false;
-			}
-			
-			
-			// Load the API and make an API call.  Display the results on the screen.
-			function makeApiCall() {
-
-				// Step 4: Load the Google+ API
-				gapi.client.load('calendar', 'v3').then(function() {
-				  // Step 5: Assemble the API request
-					  var request = gapi.client.calendar.events.list({
-							'calendarId': '<your-calendar-id(The @gmail.com>'
-						});
-				  
-						// Step 6: Execute the API request
-						request.then(function(resp) {
-
-							var eventsList = [];
-							var successArgs;
-							var successRes;
-
-							if (resp.result.error) {
-								reportError('Google Calendar API: ' + data.error.message, data.error.errors);
-							}
-							else if (resp.result.items) {
-								$.each(resp.result.items, function(i, entry) {
-									var url = entry.htmlLink;
-
-									// make the URLs for each event show times in the correct timezone
-									//if (timezoneArg) {
-									//    url = injectQsComponent(url, 'ctz=' + timezoneArg);
-									//}
-
-									eventsList.push({
-										id: entry.id,
-										title: entry.summary,
-										start: entry.start.dateTime || entry.start.date, // try timed. will fall back to all-day
-										end: entry.end.dateTime || entry.end.date, // same
-										url: url,
-										location: entry.location,
-										description: entry.description
-									});
-								});
-
-								// call the success handler(s) and allow it to return a new events array
-								successArgs = [ eventsList ].concat(Array.prototype.slice.call(arguments, 1)); // forward other jq args
-								successRes = $.fullCalendar.applyAll(true, this, successArgs);
-								if ($.isArray(successRes)) {
-									return successRes;
-								}
-							}
-
-							if(eventsList.length > 0)
-							{
-                              // Here create your calendar but the events options is :
-                              //fullcalendar.events: eventsList (Still looking for a methode that remove current event and fill with those news event without recreating the calendar.
-                              
-                            }
-                          return eventsList;
-							
-					  }, function(reason) {
-						console.log('Error: ' + reason.result.error.message);
-					  });
-				});
-			}
-
-
-		// END GOOGLE API
-*/
 
 
 
