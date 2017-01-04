@@ -6,9 +6,18 @@
 		<script src="socket.io/socket.io.js"></script>
 		<link rel="stylesheet" href="style.css" />
 
+		<!facebook Signin jquery blockiert fullcalender>
+			<!-- load jQuery_2_0_0  -->
+		<!script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+		<!script type="text/javascript">
+		var  jQuery_2_0_0  = $.noConflict(true);
+		<!/script>
+  		<!link rel="stylesheet" href="style.css" />
+
+
 		<!Fullcalender includes>
 		<link rel='stylesheet' href='fullcalendar.css' />
-		<script src='lib/jquery-3.1.1.js'></script>
+		<script src='lib/jquery-3.1.1.js'></script>		
 		<script src='lib/moment.min.js'></script>
 		<script src='lib/moment-timezone.js'></script>
 		<script src='fullcalendar.js'></script>
@@ -22,14 +31,16 @@
 		<script src="https://apis.google.com/js/client.js?onload=checkAuth"></script>
 		<!google Sign in>
 		<meta name="google-signin-client_id" content="864203635316-b31on9gaeubq72s51nbapi1gnkg2c725.apps.googleusercontent.com">
-
+		<!google authentification>
 		<script src="https://apis.google.com/js/platform.js" async defer></script>
+		<script src="https://apis.google.com/js/api.js"></script>
+
 
 
 	
-			<!bootstrap from example>
-			<script src='lib/bootstrap.min.js'></script>
-			<link rel="stylesheet" href="lib/bootstrap-combined.min.css" >
+		<!bootstrap from example>
+		<script src='lib/bootstrap.min.js'></script>
+		<link rel="stylesheet" href="lib/bootstrap-combined.min.css" >
 		<!jQueryUI>
 		<script src="lib/jquery-ui.js"></script>
 		<link rel="stylesheet" href="lib/jquery-ui.css">
@@ -55,8 +66,10 @@
  
 	<body>
 	<h1 style="letter-spacing:4px; font-family:Fantasy; text-align:right;
-color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
+	color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 	Combine fullcalender and socket.io.</h1>
+
+
 	
 		<!load picture>
 		<img src="/pictures/Tulpen.jpg" 
@@ -77,60 +90,45 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 			    left: 10px;
 			    font-size: 30px;
 			}
-
 		</style>
-	<!google sign in Button>
-	<div class="g-signin2" data-onsuccess="onSignIn"></div>
-	<a href="#" onclick="signOut();">Sign out</a>
+
+		<!facebook login script>
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/de_DE/sdk.js#xfbml=1&version=v2.8";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+
+		<!facebook login button>
+		<div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="false"></div>
+
+		
+		<!google sign in Button>
+		<div class="g-signin2" data-onsuccess="onSignIn"></div>
+		<!sign out text>
+		<a href="#" onclick="signOut();">Sign out</a>
 
 
-<!google authentifizierung>
-<script src="https://apis.google.com/js/api.js"></script>
-    <script>
-      function start() {
-        // Initializes the client with the API key and the Translate API.
-        gapi.client.init({
-          'apiKey': 'AIzaSyCOM_XtlLMvnaCY2VLobeDTHoGpl-3t-ck',
-          'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/translate/v2/rest'],
-        }).then(function() {
-          // Executes an API request, and returns a Promise.
-          // The method name `language.translations.list` comes from the API discovery.
-          return gapi.client.language.translations.list({
-            q: 'hello world',
-            source: 'en',
-            target: 'de',
-          });
-        }).then(function(response) {
-          console.log(response.result.data.translations[0].translatedText);
-        }, function(reason) {
-          console.log('Error: ' + reason.result.error.message);
-        });
-      };
-
-      // Loads the JavaScript client library and invokes `start` afterwards.
-      gapi.load('client', start);
-    </script>
-        <div id="results"></div>
-
-
-	<!google sign in Script>
-	<script type="text/javascript">
-		function onSignIn(googleUser) {
-		  var profile = googleUser.getBasicProfile();
-		  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-		  console.log('Name: ' + profile.getName());
-		  console.log('Image URL: ' + profile.getImageUrl());
-		  console.log('Email: ' + profile.getEmail());
-		}	
-		  function signOut() {
-		    var auth2 = gapi.auth2.getAuthInstance();
-		    auth2.signOut().then(function () {
-		      console.log('User signed out.');
-		  });
-  }
-
-	</script>
-	
+		<!google sign in Script>
+		<script type="text/javascript">
+			function onSignIn(googleUser) {
+			  var profile = googleUser.getBasicProfile();
+			  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+			  console.log('Name: ' + profile.getName());
+			  console.log('Image URL: ' + profile.getImageUrl());
+			  console.log('Email: ' + profile.getEmail());
+			}	
+			function signOut() {
+			    var auth2 = gapi.auth2.getAuthInstance();
+			    auth2.signOut().then(function () {
+			      console.log('User signed out.');
+			 	 });
+	 		}
+		</script>
+		
 
 
 
@@ -177,11 +175,11 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		</div>
 
 
-	//include google API Example from google
+	<!include google API Example from google>
     <script type="text/javascript">
       // Your Client ID can be retrieved from your project in the Google
       // Developer Console, https://console.developers.google.com
-      var CLIENT_ID = '<864203635316-b31on9gaeubq72s51nbapi1gnkg2c725.apps.googleusercontent.com>';
+      var CLIENT_ID = '<462717370805-cvsa01c6mjtdiog80ekprevmba7a51hu.apps.googleusercontent.com>';
 
       var SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
 
@@ -283,15 +281,7 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
       }
 
     </script>
-    
-
-
-
-	//include google api end
-
-
-
-
+	<!//include google api end>
 
 		<script>
 		$(document).ready(function() {
@@ -302,6 +292,7 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 		//Add local german Timezone to moment.tz ?not needed anymore?
   		//moment.tz.add('Europe/Berlin|CET CEST CEMT|-10 -20 -30|01010101010101210101210101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010|-2aFe0 11d0 1iO0 11A0 1o00 11A0 Qrc0 6i00 WM0 1fA0 1cM0 1cM0 1cM0 kL0 Nc0 m10 WM0 1ao0 1cp0 dX0 jz0 Dd0 1io0 17c0 1fA0 1a00 1ehA0 1a00 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|41e5');
 
+  			// instead of $ for jQuery from fullCalender we use noConflict $ for fullCalender and use jQuery from facebookApi with $
 	     	var calendar = $('#calendar').fullCalendar({
 
 	     		   
@@ -557,5 +548,9 @@ color:#800000; border-bottom:double #FFFF00; width="100%"; font-size:24pt">
 				
 			
 		</script>
+
 	</body>
+	<!footer>
+	footer
+     <!/footer>
 </html>
